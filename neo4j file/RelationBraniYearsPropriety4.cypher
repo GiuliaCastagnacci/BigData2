@@ -1,0 +1,7 @@
+LOAD CSV WITH HEADERS FROM 'file:///prova.csv' AS row
+MATCH (year:Year {year: toInteger(row.release_date)})
+CREATE (track:Track {name: row.name})
+MERGE (year)-[:CONTAINS]->(track)
+SET track.energy = toFloat(row.energy),
+    track.acousticness = toFloat(row.acousticness),
+    track.valence = toFloat(row.valence)

@@ -1,0 +1,1 @@
+CREATE (:AllYears {name: "Tutti gli anni"})

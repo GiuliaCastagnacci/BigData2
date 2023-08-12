@@ -1,0 +1,1 @@
+CREATE (:AllTimes {name: 'all times'})

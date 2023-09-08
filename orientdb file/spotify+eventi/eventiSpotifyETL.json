@@ -1,0 +1,74 @@
+{
+  "config": {
+      "log": "info",
+      "credentials": {
+          "user": "root",
+          "password": "password"
+      }
+  },
+  "source": {
+      "file": {
+          "path": "/OrientDB/datasets/spotifyDataset.csv"
+      }
+  },
+  "extractor": {
+      "csv": {}
+  },
+  "transformers": [
+      {
+        "vertex": {
+            "class": "Brano",
+            "fields": {
+              "name": "${input.name}",
+              "valence": "${input.valence}",
+              "energy": "${input.energy}",
+              "acoustiness": "${input.acoustiness}"
+          }
+        }
+      },
+      {
+        "edge": {
+            "class": "Rilasciato nel",
+            "joinFieldName": "release_date",
+            "lookup": "Anno.year",
+            "direction": "out"
+        }
+       }
+  ],
+  "loader": {
+      "orientdb": {
+          "dbURL": "plocal:/OrientDB/databases/ProgettoBD_eventiSpotify",
+          "dbUser": "admin",
+          "dbPassword": "admin",
+          "dbType": "graph",
+          "classes": [
+              {"name": "Brano", "extends": "V"},
+              {"name": "Anno", "extends": "V"},
+              {"name": "Evento", "extends": "V"},
+              {"name": "Rilasciato nel", "extends": "E"},
+              {"name": "Accade", "extends": "E"}
+          ],
+          "indexes": [
+              {
+                  "class": "Anno",
+                  "fields": [
+                      "year:integer"
+                  ],
+                  "type": "UNIQUE"
+              },
+              {
+                "class":"Brano", 
+                "fields":["name:string","valence:float", "energy:float", "acousticness:float"
+                ], 
+                "type":"NOTUNIQUE"
+                },
+                {
+                "class":"Evento", 
+                "fields":["year:integer","event:string"
+                ], 
+                "type":"NOTUNIQUE"
+                }
+          ]
+      }
+  }
+}

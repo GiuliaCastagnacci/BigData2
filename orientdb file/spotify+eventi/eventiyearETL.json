@@ -1,0 +1,51 @@
+{
+    "source": { "file": { "path": "/OrientDB/datasets/new_years.csv" } },
+    "extractor": { "csv": {} },
+    "transformers": [
+      { "vertex": { 
+        "class": "Anno",
+        "fields": {
+          "year": "${input.year}",
+          "valence_category": "${input.valence_category}",
+          "energy_category": "${input.energy_category}",
+          "acousticness_category": "${input.acousticness_category}"
+        }
+       } 
+      },
+      {
+        "edge": {
+            "class": "Rilasciato nel",
+            "joinFieldName": "year",
+            "lookup": "Brano.release_date",
+            "direction": "in"
+        }
+      }
+    ],
+    "loader": {
+      "orientdb": {
+         "dbURL": "plocal:/OrientDB/databases/ProgettoBD_eventiSpotify",
+         "dbType": "graph",
+         "classes": [
+          {"name": "Brano", "extends": "V"},
+          {"name": "Anno", "extends": "V"},
+          {"name": "Evento", "extends": "V"},
+          {"name": "Rilasciato nel", "extends": "E"},
+          {"name": "Accade", "extends": "E"}
+         ], "indexes": [
+           {"class":"Anno", "fields":["year:integer"], "type":"UNIQUE" },
+           {
+            "class":"Brano", 
+            "fields":["name:string","valence:float", "energy:float", "acousticness:float"
+            ], 
+            "type":"NOTUNIQUE"
+            },
+            {
+            "class":"Evento", 
+            "fields":["year:integer","event:string"
+            ], 
+            "type":"NOTUNIQUE"
+            }
+         ]
+      }
+    }
+  }

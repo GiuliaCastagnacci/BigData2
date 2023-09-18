@@ -10,8 +10,6 @@ def extract_data_from_html(url):
         # Utilizza BeautifulSoup per analizzare il contenuto HTML della pagina
         soup = BeautifulSoup(response.text, 'html.parser')
 
-        # Qui puoi utilizzare i metodi di BeautifulSoup per estrarre le informazioni di interesse
-    
         paragraphs = soup.find('article', class_="story primary-content text money row")
 
         f = open("datasetEventiStorici.csv", "w")
@@ -25,7 +23,7 @@ def extract_data_from_html(url):
             date = image.text.split(":")[0]
             if ( len(date) == 4):
                 f.write("%s,%s\n"%(date, image.text.split(":")[1].strip()))
-              #  print(image.text)
+            
             paragraphs = image
 
         f.close()
